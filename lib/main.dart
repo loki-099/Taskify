@@ -1,0 +1,31 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:taskify/routes/app_routes.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+// import 'pages/welcome_page.dart';
+
+void main() async {
+  await Supabase.initialize(
+    url: 'https://bbbswdglfdzcupmdnprc.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiYnN3ZGdsZmR6Y3VwbWRucHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQxODI2ODksImV4cCI6MjA1OTc1ODY4OX0.fP0b17Fe5y57aq-Z__7qMhaUwUtXKEcquZYxwh0hrd4',
+  );
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
+        fontFamily: GoogleFonts.montserrat().fontFamily,
+      ),
+      initialRoute: AppRoutes.welcome,
+      routes: AppRoutes.routes,
+    );
+  }
+}
