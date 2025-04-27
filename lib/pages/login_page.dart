@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       await authService.signInWithEmailPassword(email, password);
-      Navigator.pop(context);
+      // Navigator.pop(context);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
