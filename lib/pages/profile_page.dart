@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taskify/auth/auth_service.dart';
+import 'package:taskify/components/custom_appbar.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -9,15 +10,7 @@ class ProfilePage extends StatelessWidget {
     final currentEmail = AuthService().getUserEmail();
     return Scaffold(
       body: Text(currentEmail.toString()),
-      appBar: AppBar(
-        title: const Text("Profile Page"),
-        actions: [
-          IconButton(
-            onPressed: AuthService().signOut,
-            icon: Icon(Icons.logout),
-          ),
-        ],
-      ),
+      appBar: CustomAppbar(),
     );
   }
 }

@@ -1,10 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:taskify/components/button.dart';
-import 'package:taskify/routes/app_routes.dart';
 import 'package:taskify/utils/colors.dart';
 import 'package:taskify/auth/auth_service.dart';
 

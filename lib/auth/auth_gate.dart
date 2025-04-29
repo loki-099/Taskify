@@ -25,7 +25,6 @@ class AuthGate extends StatelessWidget {
         // final session = null;
 
         if (session != null) {
-          print(session);
           return ProfilePage();
           // Navigator.pushNamed(context, AppRoutes.profilePage);
         } else {
