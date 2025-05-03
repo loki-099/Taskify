@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskify/auth/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:taskify/cubit/user_cubit.dart';
+import 'package:taskify/cubit/user_state.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppbar({super.key});
@@ -16,6 +19,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       children: [
         Container(
           padding: EdgeInsets.only(top: statusBarHeight, left: 4, right: 4),
+          color: Color(0xfff9f9f9),
           child: IntrinsicHeight(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -28,38 +32,19 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                       icon: Icon(Icons.account_circle_sharp, color: darkColor),
                       iconSize: 50,
                     ),
-                    FutureBuilder(
-                      future: AuthService().getFirstName(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
+                    BlocBuilder<UserCubit, UserState>(
+                      builder: (context, state) {
+                        if (state.userData.isEmpty) {
+                          return const Text("No Data");
                         }
-                        if (snapshot.hasError || !snapshot.hasData) {
-                          return const Text("Hello, User!");
-                        }
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Hello!",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 15,
-                                color: darkColor,
-                              ),
-                            ),
-                            Text(
-                              snapshot.data ?? "User",
-                              style: TextStyle(
-                                fontFamily: montserratFont,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: darkColor,
-                              ),
-                            ),
-                          ],
+                        return Text(
+                          (state.userData[0]['first_name'] ?? 'User') as String,
+                          style: TextStyle(
+                            fontFamily: montserratFont,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: darkColor,
+                          ),
                         );
                       },
                     ),

@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+// import 'package:taskify/pages/home_page.dart';
+import 'package:taskify/pages/home_screen.dart';
 import 'package:taskify/pages/login_page.dart';
-import 'package:taskify/pages/profile_page.dart';
-// import 'package:taskify/routes/app_routes.dart';
-// import 'package:taskify/pages/welcome_page.dart';
+// import 'package:taskify/pages/profile_page.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -25,11 +25,9 @@ class AuthGate extends StatelessWidget {
         // final session = null;
 
         if (session != null) {
-          return ProfilePage();
-          // Navigator.pushNamed(context, AppRoutes.profilePage);
+          return HomeScreen();
         } else {
           return LoginPage();
-          // Navigator.pushNamed(context, AppRoutes.login);
         }
       },
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:taskify/cubit/user_cubit.dart';
 import 'package:taskify/routes/app_routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 // import 'pages/welcome_page.dart';
@@ -18,14 +20,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
-        fontFamily: GoogleFonts.montserrat().fontFamily,
+    return BlocProvider(
+      create: (context) => UserCubit()..updateUserData(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
+          fontFamily: GoogleFonts.montserrat().fontFamily,
+        ),
+        initialRoute: AppRoutes.welcome,
+        routes: AppRoutes.routes,
       ),
-      initialRoute: AppRoutes.welcome,
-      routes: AppRoutes.routes,
     );
   }
 }

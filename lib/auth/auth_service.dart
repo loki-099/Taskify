@@ -47,17 +47,26 @@ class AuthService {
     return user?.email;
   }
 
-  Map<String, dynamic>? getUserData() {
-    final session = _supabase.auth.currentSession;
-    final User? user = session?.user;
-    final Map<String, dynamic>? metadata = user?.userMetadata;
-    return metadata;
-  }
+  Future<List<Map<String, dynamic>>?> getUserData() async {
+    final user = _supabase.auth.currentUser;
+    if (user == null) return null;
 
-  // String? getFirstName() {
-  //   final metadata = getUserData();
-  //   return metadata?['first_name'];
-  // }
+    try {
+      final response = await _supabase
+          .from('profiles')
+          .select()
+          .eq('id', user.id);
+
+      if (response.isEmpty == true) {
+        print("Error fetching...");
+        return null;
+      }
+
+      return response;
+    } catch (e) {
+      return null;
+    }
+  }
 
   Future<String?> getFirstName() async {
     final user = _supabase.auth.currentUser;
