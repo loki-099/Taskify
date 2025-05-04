@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskify/auth/auth_service.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:taskify/components/custom_appbar.dart';
-import 'package:taskify/cubit/user_cubit.dart';
 import 'package:taskify/pages/calendar_page.dart';
 import 'package:taskify/pages/home_page.dart';
 import 'package:taskify/pages/profile_page.dart';
@@ -18,11 +16,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    HomePage(),
-    CalendarPage(),
-    TasksPage(),
-    ProfilePage(),
+  final List<Map<String, dynamic>> _pages = [
+    {'page': HomePage(), 'icon': 'assets/icons/home-icon.svg'},
+    {'page': CalendarPage(), 'icon': 'assets/icons/calendar-icon.svg'},
+    {'page': TasksPage(), 'icon': 'assets/icons/tasks-icon.svg'},
+    {'page': ProfilePage(), 'icon': 'assets/icons/profile-icon.svg'},
+    // HomePage(),
+    // CalendarPage(),
+    // TasksPage(),
+    // ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -35,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xfff9f9f9),
-      body: _pages[_selectedIndex],
+      body: _pages[_selectedIndex]['page'],
       appBar: CustomAppbar(),
       extendBody: true, // Ensures the FAB overlaps the BottomAppBar
       floatingActionButton: Container(
@@ -66,23 +68,32 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             IconButton(
               onPressed: () => _onItemTapped(0),
-              icon: const Icon(Icons.home_filled),
+              icon: SvgPicture.asset(_pages[0]['icon'], semanticsLabel: "Home"),
               color: const Color(0xFF1A6DB0),
             ),
             IconButton(
               onPressed: () => _onItemTapped(1),
-              icon: const Icon(Icons.calendar_month_rounded),
+              icon: SvgPicture.asset(
+                _pages[1]['icon'],
+                semanticsLabel: "Calendar",
+              ),
               color: const Color(0xFF1A6DB0),
             ),
             const SizedBox(width: 48), // Space for the FAB
             IconButton(
               onPressed: () => _onItemTapped(2),
-              icon: const Icon(Icons.insert_drive_file_rounded),
+              icon: SvgPicture.asset(
+                _pages[2]['icon'],
+                semanticsLabel: "Tasks",
+              ),
               color: const Color(0xFF1A6DB0),
             ),
             IconButton(
               onPressed: () => _onItemTapped(3),
-              icon: const Icon(Icons.supervisor_account_sharp),
+              icon: SvgPicture.asset(
+                _pages[3]['icon'],
+                semanticsLabel: "Profile",
+              ),
               color: const Color(0xFF1A6DB0),
             ),
           ],

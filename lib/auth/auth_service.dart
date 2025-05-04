@@ -67,28 +67,4 @@ class AuthService {
       return null;
     }
   }
-
-  Future<String?> getFirstName() async {
-    final user = _supabase.auth.currentUser;
-    if (user == null) return null; // User not logged in
-
-    try {
-      final response =
-          await _supabase
-              .from('profiles') // Query the profiles table
-              .select('first_name') // Select the first_name column
-              .eq('id', user.id) // Match the id with the user's UUID
-              .single(); // Expect a single result
-
-      if (response.isEmpty == true) {
-        print("Error fetching first_name...");
-        return null;
-      }
-
-      return response['first_name'];
-    } catch (e) {
-      print("Exception fetching first_name: $e");
-      return null;
-    }
-  }
 }

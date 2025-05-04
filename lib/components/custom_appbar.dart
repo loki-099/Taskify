@@ -35,16 +35,31 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                     BlocBuilder<UserCubit, UserState>(
                       builder: (context, state) {
                         if (state.userData.isEmpty) {
-                          return const Text("No Data");
+                          return CircularProgressIndicator();
                         }
-                        return Text(
-                          (state.userData[0]['first_name'] ?? 'User') as String,
-                          style: TextStyle(
-                            fontFamily: montserratFont,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: darkColor,
-                          ),
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Hello",
+                              style: TextStyle(
+                                fontFamily: montserratFont,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: darkColor,
+                              ),
+                            ),
+                            Text(
+                              (state.userData[0]['first_name'] ?? 'User')
+                                  as String,
+                              style: TextStyle(
+                                fontFamily: montserratFont,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: darkColor,
+                              ),
+                            ),
+                          ],
                         );
                       },
                     ),
@@ -52,7 +67,13 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 IconButton(
                   onPressed: AuthService().signOut,
-                  icon: Icon(Icons.notifications, color: darkColor),
+                  icon: Badge(
+                    // label: Text(""),
+                    isLabelVisible: true,
+                    smallSize: 12,
+                    backgroundColor: Color(0xff06BEE1),
+                    child: Icon(Icons.notifications, color: darkColor),
+                  ),
                   iconSize: 30,
                 ),
               ],
