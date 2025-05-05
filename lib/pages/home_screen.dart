@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:taskify/components/custom_appbar.dart';
+import 'package:taskify/cubit/user_cubit.dart';
 import 'package:taskify/pages/calendar_page.dart';
 import 'package:taskify/pages/home_page.dart';
 import 'package:taskify/pages/profile_page.dart';
@@ -31,6 +33,12 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    context.read<UserCubit>().updateUserData();
+    super.initState();
   }
 
   @override

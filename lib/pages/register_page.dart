@@ -13,31 +13,36 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPage extends State<RegisterPage> {
-  // get auth service
+  // Get auth service
   final authService = AuthService();
 
-  // text controllers
+  // Text controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
 
   bool isPasswordSame(String password, String confirmPassword) {
-    if (password == confirmPassword) {
-      return true;
-    } else {
-      return false;
-    }
+    return password == confirmPassword;
   }
 
-  // login button pressed
+  // Login button pressed
   void login() async {
+    final firstName = _firstNameController.text;
+    final lastName = _lastNameController.text;
     final email = _emailController.text;
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
 
     if (isPasswordSame(password, confirmPassword)) {
       try {
-        await authService.signUpWithEmailPassword(email, password);
+        await authService.signUpWithEmailPassword(
+          email,
+          password,
+          firstName,
+          lastName,
+        );
         Navigator.pop(context);
       } catch (e) {
         if (mounted) {
@@ -49,218 +54,176 @@ class _RegisterPage extends State<RegisterPage> {
     } else {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Passwords don't match")));
+      ).showSnackBar(const SnackBar(content: Text("Passwords don't match")));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(
-            context,
-          ).unfocus(); // Dismiss the keyboard when tapping outside
-        },
-        child: Container(
-          decoration: const BoxDecoration(color: Colors.black),
-          child: Stack(
-            children: [
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: 400,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [AppColors.color1, AppColors.color4],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(
+          context,
+        ).unfocus(); // Dismiss the keyboard when tapping outside
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Color(0xfff9f9f9),
+        appBar: AppBar(
+          backgroundColor: Color(0xfff9f9f9),
+          automaticallyImplyLeading: false,
+          // title: Text(
+          //   "Create an account",
+          //   style: TextStyle(
+          //     color: AppColors.colorText,
+          //     fontSize: 16,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          // ),
+        ),
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(
+              context,
+            ).unfocus(); // Dismiss the keyboard when tapping outside
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    "Create an account",
+                    style: TextStyle(
+                      color: AppColors.colorText,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 50,
-                      left: 24,
-                      right: 24,
+                ),
+                SizedBox(height: 20),
+                // First Name
+                TextField(
+                  controller: _firstNameController,
+                  decoration: const InputDecoration(
+                    labelText: "First Name",
+                    labelStyle: TextStyle(color: AppColors.colorText),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.colorText),
                     ),
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          'assets/images/logo.png',
-                          height: 165,
-                          fit: BoxFit.fitHeight,
-                        ),
-                        Text(
-                          "TASKIFY",
-                          style: TextStyle(
-                            fontFamily: GoogleFonts.montserrat().fontFamily,
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(height: 0),
-                        Text(
-                          "Manage and organize your tasks efficiently.",
-                          style: TextStyle(
-                            color: Colors.white,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.color1, width: 2),
+                    ),
+                    suffixIcon: Icon(Icons.person, color: AppColors.colorText),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // Last Name
+                TextField(
+                  controller: _lastNameController,
+                  decoration: const InputDecoration(
+                    labelText: "Last Name",
+                    labelStyle: TextStyle(color: AppColors.colorText),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.colorText),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.color1, width: 2),
+                    ),
+                    suffixIcon: Icon(Icons.person, color: AppColors.colorText),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // Email TextField
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: "Email",
+                    labelStyle: TextStyle(color: AppColors.colorText),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.colorText),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.color1, width: 2),
+                    ),
+                    suffixIcon: Icon(
+                      Icons.email_outlined,
+                      color: AppColors.colorText,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // Password TextField
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: "Password",
+                    labelStyle: TextStyle(color: AppColors.colorText),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.colorText),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.color1, width: 2),
+                    ),
+                    suffixIcon: Icon(Icons.key, color: AppColors.colorText),
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // Confirm Password TextField
+                TextField(
+                  controller: _confirmPasswordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: "Confirm Password",
+                    labelStyle: TextStyle(color: AppColors.colorText),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.colorText),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.color1, width: 2),
+                    ),
+                    suffixIcon: Icon(Icons.key, color: AppColors.colorText),
+                  ),
+                ),
+                const SizedBox(height: 50),
+
+                // Sign Up Button
+                Center(child: CustomButton(text: "Sign Up", onPressed: login)),
+                const SizedBox(height: 20),
+
+                // Already Have an Account
+                Center(
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontFamily: GoogleFonts.montserrat().fontFamily,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 12,
+                        color: const Color(0xFF000000),
+                      ),
+                      children: <TextSpan>[
+                        const TextSpan(text: "Already have an account? "),
+                        TextSpan(
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
                             fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF06BEE1),
                           ),
+                          recognizer:
+                              TapGestureRecognizer()
+                                ..onTap = () => Navigator.pop(context),
+                          text: "Sign In",
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: 450,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(24),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Create an account",
-                            style: TextStyle(
-                              color: AppColors.colorText,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          TextField(
-                            controller: _emailController,
-                            decoration: InputDecoration(
-                              labelText: "Email",
-                              labelStyle: TextStyle(color: AppColors.colorText),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: AppColors.colorText,
-                                ), // Bottom border color
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: AppColors.color1,
-                                  width: 2,
-                                ), // Bottom border when focused
-                              ),
-                              suffixIcon: Icon(
-                                Icons.email_outlined,
-                                color: AppColors.colorText,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          TextField(
-                            controller: _passwordController,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              labelText: "Password",
-                              labelStyle: TextStyle(color: AppColors.colorText),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: AppColors.colorText,
-                                ), // Bottom border color
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: AppColors.color1,
-                                  width: 2,
-                                ), // Bottom border when focused
-                              ),
-                              suffixIcon: Icon(
-                                Icons.key,
-                                color: AppColors.colorText,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          TextField(
-                            controller: _confirmPasswordController,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              labelText: "Confirm Password",
-                              labelStyle: TextStyle(color: AppColors.colorText),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: AppColors.colorText,
-                                ), // Bottom border color
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: AppColors.color1,
-                                  width: 2,
-                                ), // Bottom border when focused
-                              ),
-                              suffixIcon: Icon(
-                                Icons.key,
-                                color: AppColors.colorText,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 12),
-                          SizedBox(height: 60),
-                          Center(
-                            child: CustomButton(
-                              text: "Sign In",
-                              onPressed: login,
-                            ),
-                          ),
-                          Center(
-                            heightFactor: 2,
-                            child: RichText(
-                              text: TextSpan(
-                                style: TextStyle(
-                                  fontFamily:
-                                      GoogleFonts.montserrat().fontFamily,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 12,
-                                  color: Color(0xFF000000),
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(text: "Already have an account? "),
-                                  TextSpan(
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                      color: Color(0xFF06BEE1),
-                                    ),
-                                    recognizer:
-                                        TapGestureRecognizer()
-                                          ..onTap =
-                                              () => Navigator.pop(context),
-                                    text: "Sign In",
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

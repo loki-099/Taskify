@@ -23,12 +23,23 @@ class AuthService {
   Future<AuthResponse> signUpWithEmailPassword(
     String email,
     String password,
+    String firstName,
+    String lastName,
   ) async {
     try {
       final response = await _supabase.auth.signUp(
         email: email,
         password: password,
       );
+
+      if (response.user != null) {
+        final userId = response.user?.id;
+
+        final profileResponse = await _supabase.from('profiles').insert([
+          {'id': userId, 'first_name': firstName, 'last_name': lastName},
+        ]);
+      }
+
       return response;
     } catch (e) {
       throw Exception('Error signing in: $e');

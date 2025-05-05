@@ -39,6 +39,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                         }
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "Hello",
