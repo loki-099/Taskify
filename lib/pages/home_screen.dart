@@ -23,10 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
     {'page': CalendarPage(), 'icon': 'assets/icons/calendar-icon.svg'},
     {'page': TasksPage(), 'icon': 'assets/icons/tasks-icon.svg'},
     {'page': ProfilePage(), 'icon': 'assets/icons/profile-icon.svg'},
-    // HomePage(),
-    // CalendarPage(),
-    // TasksPage(),
-    // ProfilePage(),
   ];
 
   void _onItemTapped(int index) {

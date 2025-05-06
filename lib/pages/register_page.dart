@@ -81,149 +81,142 @@ class _RegisterPage extends State<RegisterPage> {
           //   ),
           // ),
         ),
-        body: GestureDetector(
-          onTap: () {
-            FocusScope.of(
-              context,
-            ).unfocus(); // Dismiss the keyboard when tapping outside
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Text(
-                    "Create an account",
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  "Create an account",
+                  style: TextStyle(
+                    color: AppColors.colorText,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              // First Name
+              TextField(
+                controller: _firstNameController,
+                decoration: const InputDecoration(
+                  labelText: "First Name",
+                  labelStyle: TextStyle(color: AppColors.colorText),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.colorText),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.color1, width: 2),
+                  ),
+                  suffixIcon: Icon(Icons.person, color: AppColors.colorText),
+                ),
+              ),
+              const SizedBox(height: 10),
+              // Last Name
+              TextField(
+                controller: _lastNameController,
+                decoration: const InputDecoration(
+                  labelText: "Last Name",
+                  labelStyle: TextStyle(color: AppColors.colorText),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.colorText),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.color1, width: 2),
+                  ),
+                  suffixIcon: Icon(Icons.person, color: AppColors.colorText),
+                ),
+              ),
+              const SizedBox(height: 10),
+              // Email TextField
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: "Email",
+                  labelStyle: TextStyle(color: AppColors.colorText),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.colorText),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.color1, width: 2),
+                  ),
+                  suffixIcon: Icon(
+                    Icons.email_outlined,
+                    color: AppColors.colorText,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // Password TextField
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: "Password",
+                  labelStyle: TextStyle(color: AppColors.colorText),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.colorText),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.color1, width: 2),
+                  ),
+                  suffixIcon: Icon(Icons.key, color: AppColors.colorText),
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // Confirm Password TextField
+              TextField(
+                controller: _confirmPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: "Confirm Password",
+                  labelStyle: TextStyle(color: AppColors.colorText),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.colorText),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.color1, width: 2),
+                  ),
+                  suffixIcon: Icon(Icons.key, color: AppColors.colorText),
+                ),
+              ),
+              const SizedBox(height: 50),
+
+              // Sign Up Button
+              Center(child: CustomButton(text: "Sign Up", onPressed: login)),
+              const SizedBox(height: 20),
+
+              // Already Have an Account
+              Center(
+                child: RichText(
+                  text: TextSpan(
                     style: TextStyle(
-                      color: AppColors.colorText,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontFamily: GoogleFonts.montserrat().fontFamily,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 12,
+                      color: const Color(0xFF000000),
                     ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                // First Name
-                TextField(
-                  controller: _firstNameController,
-                  decoration: const InputDecoration(
-                    labelText: "First Name",
-                    labelStyle: TextStyle(color: AppColors.colorText),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.colorText),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.color1, width: 2),
-                    ),
-                    suffixIcon: Icon(Icons.person, color: AppColors.colorText),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                // Last Name
-                TextField(
-                  controller: _lastNameController,
-                  decoration: const InputDecoration(
-                    labelText: "Last Name",
-                    labelStyle: TextStyle(color: AppColors.colorText),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.colorText),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.color1, width: 2),
-                    ),
-                    suffixIcon: Icon(Icons.person, color: AppColors.colorText),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                // Email TextField
-                TextField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: "Email",
-                    labelStyle: TextStyle(color: AppColors.colorText),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.colorText),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.color1, width: 2),
-                    ),
-                    suffixIcon: Icon(
-                      Icons.email_outlined,
-                      color: AppColors.colorText,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-
-                // Password TextField
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: "Password",
-                    labelStyle: TextStyle(color: AppColors.colorText),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.colorText),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.color1, width: 2),
-                    ),
-                    suffixIcon: Icon(Icons.key, color: AppColors.colorText),
-                  ),
-                ),
-                const SizedBox(height: 10),
-
-                // Confirm Password TextField
-                TextField(
-                  controller: _confirmPasswordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: "Confirm Password",
-                    labelStyle: TextStyle(color: AppColors.colorText),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.colorText),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.color1, width: 2),
-                    ),
-                    suffixIcon: Icon(Icons.key, color: AppColors.colorText),
-                  ),
-                ),
-                const SizedBox(height: 50),
-
-                // Sign Up Button
-                Center(child: CustomButton(text: "Sign Up", onPressed: login)),
-                const SizedBox(height: 20),
-
-                // Already Have an Account
-                Center(
-                  child: RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        fontFamily: GoogleFonts.montserrat().fontFamily,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 12,
-                        color: const Color(0xFF000000),
-                      ),
-                      children: <TextSpan>[
-                        const TextSpan(text: "Already have an account? "),
-                        TextSpan(
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: Color(0xFF06BEE1),
-                          ),
-                          recognizer:
-                              TapGestureRecognizer()
-                                ..onTap = () => Navigator.pop(context),
-                          text: "Sign In",
+                    children: <TextSpan>[
+                      const TextSpan(text: "Already have an account? "),
+                      TextSpan(
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: Color(0xFF06BEE1),
                         ),
-                      ],
-                    ),
+                        recognizer:
+                            TapGestureRecognizer()
+                              ..onTap = () => Navigator.pop(context),
+                        text: "Sign In",
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
