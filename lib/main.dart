@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:taskify/cubit/task_cubit.dart';
 import 'package:taskify/cubit/user_cubit.dart';
 import 'package:taskify/routes/app_routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -20,8 +21,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => UserCubit()..updateUserData(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<UserCubit>(
+          create: (context) => UserCubit()..updateUserData(),
+        ),
+        BlocProvider<TaskCubit>(create: (context) => TaskCubit()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',

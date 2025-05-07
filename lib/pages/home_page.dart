@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:taskify/components/task/task_card.dart';
+import 'package:taskify/cubit/task_cubit.dart';
+import 'package:taskify/cubit/task_state.dart';
+import 'package:collection/collection.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -46,19 +51,24 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          SizedBox(height: 10),
-          SizedBox(
+          const SizedBox(height: 10),
+          Container(
+            alignment: Alignment.topLeft,
             child: SingleChildScrollView(
               padding: EdgeInsets.all(4),
               scrollDirection: Axis.horizontal,
-              child: Row(
-                spacing: 10,
-                children: [
-                  Container(width: 200, height: 200, color: Colors.blue),
-                  Container(width: 200, height: 200, color: Colors.blue),
-                  Container(width: 200, height: 200, color: Colors.blue),
-                  Container(width: 200, height: 200, color: Colors.blue),
-                ],
+              child: BlocBuilder<TaskCubit, TaskState>(
+                builder: (context, state) {
+                  final taskCards =
+                      state.taskDatas.mapIndexed((index, task) {
+                        return TaskCard(index, task['task_title']);
+                      }).toList();
+                  return Row(
+                    spacing: 10,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: taskCards,
+                  );
+                },
               ),
             ),
           ),
