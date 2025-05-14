@@ -1,5 +1,6 @@
 // import 'package:flutter/material.dart';
 import 'package:taskify/auth/auth_gate.dart';
+import 'package:taskify/components/task/newtask_screen.dart';
 import 'package:taskify/pages/home_page.dart';
 import 'package:taskify/pages/profile_page.dart';
 import 'package:taskify/pages/register_page.dart';
@@ -13,6 +14,7 @@ class AppRoutes {
   static const register = '/register';
   static const profilePage = '/profilePage';
   static const homePage = '/homePage';
+  static const newtaskScreen = '/newtask';
 
   static final routes = {
     welcome: (context) => WelcomePage(),
@@ -20,5 +22,6 @@ class AppRoutes {
     register: (context) => RegisterPage(),
     profilePage: (context) => ProfilePage(),
     homePage: (context) => HomePage(),
+    newtaskScreen: (context) => NewTaskScreen(),
   };
 }

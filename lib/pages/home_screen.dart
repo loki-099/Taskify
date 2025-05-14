@@ -8,6 +8,8 @@ import 'package:taskify/pages/calendar_page.dart';
 import 'package:taskify/pages/home_page.dart';
 import 'package:taskify/pages/profile_page.dart';
 import 'package:taskify/pages/tasks_page.dart';
+import 'package:taskify/routes/app_routes.dart';
+import 'package:taskify/utils/colors.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff9f9f9),
+      backgroundColor: AppColors.white,
       body: _pages[_selectedIndex]['page'],
       appBar: CustomAppbar(),
       extendBody: true, // Ensures the FAB overlaps the BottomAppBar
@@ -57,7 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: FloatingActionButton(
-          onPressed: () => print("Floating Action Button Pressed"),
+          onPressed:
+              () => Navigator.pushNamed(context, AppRoutes.newtaskScreen),
           shape: const CircleBorder(),
           backgroundColor: Colors.transparent, // Set to transparent
           child: const Icon(Icons.add_rounded, color: Colors.white, size: 45),
