@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:taskify/components/custom_appbar.dart';
 import 'package:taskify/cubit/task_cubit.dart';
 import 'package:taskify/cubit/user_cubit.dart';
 import 'package:taskify/pages/calendar_page.dart';
@@ -46,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: _pages[_selectedIndex]['page'],
-      // appBar: CustomAppbar(),
       extendBody: true, // Ensures the FAB overlaps the BottomAppBar
       floatingActionButton: Container(
         decoration: const BoxDecoration(

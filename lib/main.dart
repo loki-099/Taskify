@@ -5,6 +5,7 @@ import 'package:taskify/cubit/task_cubit.dart';
 import 'package:taskify/cubit/user_cubit.dart';
 import 'package:taskify/routes/app_routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taskify/utils/colors.dart';
 // import 'pages/welcome_page.dart';
 
 void main() async {
@@ -32,7 +33,11 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.color1,
+            primary: AppColors.color1,
+            secondary: AppColors.color4,
+          ),
           fontFamily: GoogleFonts.montserrat().fontFamily,
         ),
         initialRoute: AppRoutes.welcome,
