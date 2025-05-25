@@ -18,7 +18,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: EdgeInsets.only(top: statusBarHeight, left: 4, right: 4),
+          padding: EdgeInsets.only(top: statusBarHeight - 15),
           color: Color(0xfff9f9f9),
           child: IntrinsicHeight(
             child: Row(

@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: _pages[_selectedIndex]['page'],
-      appBar: CustomAppbar(),
+      // appBar: CustomAppbar(),
       extendBody: true, // Ensures the FAB overlaps the BottomAppBar
       floatingActionButton: Container(
         decoration: const BoxDecoration(

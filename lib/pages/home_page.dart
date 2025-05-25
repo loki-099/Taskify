@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:taskify/components/custom_appbar.dart';
 import 'package:taskify/components/task/task_card.dart';
 import 'package:taskify/cubit/task_cubit.dart';
 import 'package:taskify/cubit/task_state.dart';
@@ -26,33 +27,38 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(8),
       child: Column(
         children: [
+          CustomAppbar(),
           SizedBox(
-            child: Row(
-              spacing: 8,
-              children: [
-                TasksClassButton(
-                  textButton: "In-progress",
-                  isSelected: selectedTasksClass == tasksClass[0],
-                  onTap: () => setSelectedTasksClass("inProgress"),
-                ),
-                TasksClassButton(
-                  textButton: "Completed",
-                  isSelected: selectedTasksClass == tasksClass[1],
-                  onTap: () => setSelectedTasksClass("completed"),
-                ),
-                TasksClassButton(
-                  textButton: "Missed",
-                  isSelected: selectedTasksClass == tasksClass[2],
-                  onTap: () => setSelectedTasksClass("missed"),
-                ),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8, left: 8),
+              child: Row(
+                spacing: 8,
+                children: [
+                  TasksClassButton(
+                    textButton: "In-progress",
+                    isSelected: selectedTasksClass == tasksClass[0],
+                    onTap: () => setSelectedTasksClass("inProgress"),
+                  ),
+                  TasksClassButton(
+                    textButton: "Completed",
+                    isSelected: selectedTasksClass == tasksClass[1],
+                    onTap: () => setSelectedTasksClass("completed"),
+                  ),
+                  TasksClassButton(
+                    textButton: "Missed",
+                    isSelected: selectedTasksClass == tasksClass[2],
+                    onTap: () => setSelectedTasksClass("missed"),
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 4),
           Container(
+            padding: EdgeInsets.all(4),
             alignment: Alignment.topLeft,
             child: SingleChildScrollView(
               padding: EdgeInsets.all(4),
