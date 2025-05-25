@@ -77,7 +77,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                       ),
                       decoration: InputDecoration(
                         hintText: "Enter task title",
-                        hintStyle: TextStyle(color: AppColors.white),
+                        hintStyle: TextStyle(color: Colors.white70),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             width: 2,
@@ -110,7 +110,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                       ),
                       decoration: InputDecoration(
                         hintText: "Add a description",
-                        hintStyle: TextStyle(color: AppColors.white),
+                        hintStyle: TextStyle(color: Colors.white70),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             width: 2,
