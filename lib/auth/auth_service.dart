@@ -78,4 +78,31 @@ class AuthService {
       return null;
     }
   }
+
+  Future<void> insertSchedTask(
+    taskTitle,
+    taskDescription,
+    taskCategory,
+    taskScheduleDay,
+    taskScheduleTime,
+    taskPriorityLevel,
+  ) async {
+    try {
+      await _supabase.from('task').insert([
+        {
+          'user_id': _supabase.auth.currentUser!.id,
+          'task_title': taskTitle,
+          'task_description': taskDescription,
+          'task_category': taskCategory,
+          'task_deadline': null,
+          'task_schedule_day': taskScheduleDay,
+          'task_schedule_time': taskScheduleTime,
+          'task_priority_level': taskPriorityLevel,
+          'task_status': "inp",
+        },
+      ]);
+    } catch (e) {
+      throw Exception('Error inserting: $e');
+    }
+  }
 }
