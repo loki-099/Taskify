@@ -105,4 +105,30 @@ class AuthService {
       throw Exception('Error inserting: $e');
     }
   }
+
+  Future<void> insertDeadTask(
+    taskTitle,
+    taskDescription,
+    taskCategory,
+    taskDeadline,
+    taskPriorityLevel,
+  ) async {
+    try {
+      await _supabase.from('task').insert([
+        {
+          'user_id': _supabase.auth.currentUser!.id,
+          'task_title': taskTitle,
+          'task_description': taskDescription,
+          'task_category': taskCategory,
+          'task_deadline': taskDeadline,
+          'task_schedule_day': null,
+          'task_schedule_time': null,
+          'task_priority_level': taskPriorityLevel,
+          'task_status': "inp",
+        },
+      ]);
+    } catch (e) {
+      throw Exception('Error inserting: $e');
+    }
+  }
 }

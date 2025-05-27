@@ -30,21 +30,43 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   List<bool> _selectedDays = List.generate(7, (_) => false);
 
   void createTaskFunction() {
-    final hour = _selectedSchedTime!.hour.toString().padLeft(2, '0');
-    final minute = _selectedSchedTime!.minute.toString().padLeft(2, '0');
-    final timetzString = "$hour:$minute:00+08:00";
     // print(_selectedTaskPrio);
     final taskTitle = _taskTitleController.text;
     final taskDescription = _taskDescriptionController.text;
     if (tSchedFDead != null) {
       if (tSchedFDead!) {
-        // TODO
+        final hour = _selectedSchedTime!.hour.toString().padLeft(2, '0');
+        final minute = _selectedSchedTime!.minute.toString().padLeft(2, '0');
+        final timetzString = "$hour:$minute:00+08:00";
         AuthService().insertSchedTask(
           taskTitle,
           taskDescription,
           _category,
           _selectedSchedDays,
           timetzString,
+          _selectedTaskPrio,
+        );
+      } else {
+        final combinedDateTime = DateTime(
+          _selectedDate!.year,
+          _selectedDate!.month,
+          _selectedDate!.day,
+          _selectedDeadTime!.hour,
+          _selectedDeadTime!.minute,
+          0,
+        );
+        final formatted =
+            "${combinedDateTime.year.toString().padLeft(4, '0')}-"
+            "${combinedDateTime.month.toString().padLeft(2, '0')}-"
+            "${combinedDateTime.day.toString().padLeft(2, '0')} "
+            "${combinedDateTime.hour.toString().padLeft(2, '0')}:"
+            "${combinedDateTime.minute.toString().padLeft(2, '0')}:"
+            "${combinedDateTime.second.toString().padLeft(2, '0')}+08";
+        AuthService().insertDeadTask(
+          taskTitle,
+          taskDescription,
+          _category,
+          formatted,
           _selectedTaskPrio,
         );
       }

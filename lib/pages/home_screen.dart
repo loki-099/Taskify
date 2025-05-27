@@ -43,7 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
       body: _pages[_selectedIndex]['page'],
       extendBody: true, // Ensures the FAB overlaps the BottomAppBar
       floatingActionButton: Container(

@@ -46,12 +46,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 builder: (context, state) {
                   return Column(
                     children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.account_box_sharp),
-                        iconSize: 150,
-                        color: AppColors.white,
+                      SizedBox(height: 22),
+                      GestureDetector(
+                        child: Image.asset('assets/images/profile.png'),
                       ),
+                      SizedBox(height: 10),
                       Text(
                         "${state.userData[0]['first_name']} ${state.userData[0]['last_name']}",
                         style: const TextStyle(
@@ -75,8 +74,8 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           // DraggableScrollableSheet for bottom panel
           DraggableScrollableSheet(
-            initialChildSize: 0.53, // Fraction of screen height
-            minChildSize: 0.53,
+            initialChildSize: 0.59, // Fraction of screen height
+            minChildSize: 0.59,
             maxChildSize: 0.85,
             builder: (context, scrollController) {
               return Container(

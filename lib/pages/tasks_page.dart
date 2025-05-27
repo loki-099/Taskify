@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:taskify/components/notif_button.dart';
+import 'package:taskify/utils/colors.dart';
 
 class TasksPage extends StatefulWidget {
   const TasksPage({super.key});
@@ -10,6 +12,19 @@ class TasksPage extends StatefulWidget {
 class _TasksPageState extends State<TasksPage> {
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text("TasksPage"));
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: Text(
+          "My Tasks",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColors.colorText,
+          ),
+        ),
+        actions: [NotificationButton()],
+      ),
+    );
   }
 }
