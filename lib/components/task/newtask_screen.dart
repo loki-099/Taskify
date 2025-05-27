@@ -622,11 +622,6 @@ class _TimePreferenceWidgetState extends State<TimePreferenceWidget> {
       },
     ).then((result) {
       if (result != null && result is List<bool>) {
-        // Handle your state update here, outside the dialog
-        // Example:
-        // setState(() {
-        //   _selectedDays = List<bool>.from(result);
-        // });
         setSelectedSchedDays();
       }
     });

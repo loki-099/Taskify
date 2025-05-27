@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
       child: Column(
         children: [
           CustomAppbar(),

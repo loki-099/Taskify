@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
             primary: AppColors.color1,
             secondary: AppColors.color4,
           ),
-          fontFamily: GoogleFonts.montserrat().fontFamily,
+          fontFamily: GoogleFonts.poppins().fontFamily,
         ),
         initialRoute: AppRoutes.welcome,
         routes: AppRoutes.routes,
