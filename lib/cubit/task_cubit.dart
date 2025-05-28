@@ -20,6 +20,7 @@ class TaskCubit extends Cubit<TaskState> {
           emit(TaskState.initialize());
         } else {
           emit(TaskState(response));
+          print("Success updating bloc");
         }
       } catch (e) {
         print("Error: $e");

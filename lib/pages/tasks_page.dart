@@ -16,7 +16,7 @@ class TasksPage extends StatefulWidget {
 }
 
 class _TasksPageState extends State<TasksPage> {
-  static List<String> tasksClass = ["allTasks", "high", "medium", "low"];
+  static List<String> tasksClass = ["allTasks", "level3", "level2", "level1"];
   String selectedTasksClass = "allTasks";
 
   void setSelectedTasksClass(String tasksClass) {
@@ -57,17 +57,17 @@ class _TasksPageState extends State<TasksPage> {
                   TasksClassButton(
                     textButton: "High",
                     isSelected: selectedTasksClass == tasksClass[1],
-                    onTap: () => setSelectedTasksClass("high"),
+                    onTap: () => setSelectedTasksClass("level3"),
                   ),
                   TasksClassButton(
                     textButton: "Medium",
                     isSelected: selectedTasksClass == tasksClass[2],
-                    onTap: () => setSelectedTasksClass("medium"),
+                    onTap: () => setSelectedTasksClass("level2"),
                   ),
                   TasksClassButton(
                     textButton: "Low",
                     isSelected: selectedTasksClass == tasksClass[3],
-                    onTap: () => setSelectedTasksClass("low"),
+                    onTap: () => setSelectedTasksClass("level1"),
                   ),
                 ],
               ),
@@ -79,16 +79,47 @@ class _TasksPageState extends State<TasksPage> {
               scrollDirection: Axis.vertical,
               child: BlocBuilder<TaskCubit, TaskState>(
                 builder: (context, state) {
+                  final filteredTasks =
+                      (selectedTasksClass == "allTasks"
+                              ? state.taskDatas
+                              : state.taskDatas.where(
+                                (task) =>
+                                    task['task_priority_level'] ==
+                                    selectedTasksClass,
+                              ))
+                          .toList();
+
+                  filteredTasks.sort((a, b) {
+                    final aIsCom = a['task_status'] == 'com' ? 1 : 0;
+                    final bIsCom = b['task_status'] == 'com' ? 1 : 0;
+                    return aIsCom.compareTo(bIsCom);
+                  });
+
                   final prioTaskCards =
-                      state.taskDatas.mapIndexed((index, task) {
-                        return PrioTaskCard(
-                          task['task_title'],
-                          "Today",
-                          "7:00 AM",
-                          task['task_priority_level'],
-                          task['task_status'],
-                        );
-                      }).toList();
+                      filteredTasks
+                          .mapIndexed((index, task) {
+                            if (task['task_deadline'] == null) {
+                              return PrioTaskCard.scheduled(
+                                task['id'],
+                                task['task_title'],
+                                task['task_schedule_day'],
+                                task['task_schedule_time'],
+                                task['task_priority_level'],
+                                task['task_status'] == 'com',
+                              );
+                            } else if (task['task_schedule_time'] == null) {
+                              return PrioTaskCard.deadline(
+                                task['id'],
+                                task['task_title'],
+                                task['task_deadline'],
+                                task['task_priority_level'],
+                                task['task_status'] == 'com',
+                              );
+                            }
+                            return null;
+                          })
+                          .whereType<Widget>()
+                          .toList();
                   return Column(spacing: 8, children: prioTaskCards);
                 },
               ),

@@ -151,7 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             SizedBox(
                               width: double.infinity,
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: AuthService().signOut,
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
