@@ -29,7 +29,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   String? _selectedTaskPrio;
   List<bool> _selectedDays = List.generate(7, (_) => false);
 
-  void createTaskFunction() {
+  Future<void> createTaskFunction() async {
     // print(_selectedTaskPrio);
     final taskTitle = _taskTitleController.text;
     final taskDescription = _taskDescriptionController.text;
@@ -38,7 +38,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         final hour = _selectedSchedTime!.hour.toString().padLeft(2, '0');
         final minute = _selectedSchedTime!.minute.toString().padLeft(2, '0');
         final timetzString = "$hour:$minute:00+08:00";
-        AuthService().insertSchedTask(
+        await AuthService().insertSchedTask(
           taskTitle,
           taskDescription,
           _category,
@@ -62,7 +62,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
             "${combinedDateTime.hour.toString().padLeft(2, '0')}:"
             "${combinedDateTime.minute.toString().padLeft(2, '0')}:"
             "${combinedDateTime.second.toString().padLeft(2, '0')}+08";
-        AuthService().insertDeadTask(
+        await AuthService().insertDeadTask(
           taskTitle,
           taskDescription,
           _category,
@@ -72,7 +72,6 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
       }
     }
     context.read<TaskCubit>().updateTaskDatas();
-    Navigator.pop(context);
   }
 
   void changeCategory(String? selectedCategory) {
@@ -480,7 +479,10 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                       right: 20,
                       child: CustomButton(
                         text: "Create Task",
-                        onPressed: createTaskFunction,
+                        onPressed: () async {
+                          await createTaskFunction();
+                          Navigator.pop(context, true);
+                        },
                       ),
                     ),
                   ],

@@ -56,8 +56,26 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: FloatingActionButton(
-          onPressed:
-              () => Navigator.pushNamed(context, AppRoutes.newtaskScreen),
+          onPressed: () async {
+            final result = await Navigator.pushNamed(
+              context,
+              AppRoutes.newtaskScreen,
+            );
+            if (result == true) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Task created successfully!'),
+                  duration: Duration(seconds: 2),
+                  backgroundColor: Colors.green,
+                  behavior: SnackBarBehavior.floating,
+                  margin: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              );
+            }
+          },
           shape: const CircleBorder(),
           backgroundColor: Colors.transparent, // Set to transparent
           child: const Icon(Icons.add_rounded, color: Colors.white, size: 45),
