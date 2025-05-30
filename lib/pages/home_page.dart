@@ -5,7 +5,6 @@ import 'package:taskify/components/custom_appbar.dart';
 import 'package:taskify/components/task/task_card.dart';
 import 'package:taskify/cubit/task_cubit.dart';
 import 'package:taskify/cubit/task_state.dart';
-import 'package:collection/collection.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,76 +14,140 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String selectedTasksClass = "inProgress";
-  static List<String> tasksClass = ["inProgress", "completed", "missed"];
+  String selectedTasksClass = "inp";
+  static List<String> tasksClass = ["inp", "com", "mis"];
+
+  List<Map<String, dynamic>> _visibleTasks = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // _visibleTasks will be initialized in BlocBuilder's first build
+  }
 
   void setSelectedTasksClass(String tasksClass) {
     setState(() {
       selectedTasksClass = tasksClass;
+      // Reset _visibleTasks when changing tab
+      _visibleTasks = [];
+    });
+  }
+
+  void _removeTask(int index) {
+    setState(() {
+      _visibleTasks.removeAt(index);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
       child: Column(
         children: [
           CustomAppbar(),
-          SizedBox(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8, left: 8),
-              child: Row(
-                spacing: 8,
-                children: [
-                  TasksClassButton(
-                    textButton: "In-progress",
-                    isSelected: selectedTasksClass == tasksClass[0],
-                    onTap: () => setSelectedTasksClass("inProgress"),
-                  ),
-                  TasksClassButton(
-                    textButton: "Completed",
-                    isSelected: selectedTasksClass == tasksClass[1],
-                    onTap: () => setSelectedTasksClass("completed"),
-                  ),
-                  TasksClassButton(
-                    textButton: "Missed",
-                    isSelected: selectedTasksClass == tasksClass[2],
-                    onTap: () => setSelectedTasksClass("missed"),
-                  ),
-                ],
-              ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              children: [
+                TasksClassButton(
+                  textButton: "In-progress",
+                  isSelected: selectedTasksClass == tasksClass[0],
+                  onTap: () => setSelectedTasksClass(tasksClass[0]),
+                ),
+                const SizedBox(width: 8),
+                TasksClassButton(
+                  textButton: "Completed",
+                  isSelected: selectedTasksClass == tasksClass[1],
+                  onTap: () => setSelectedTasksClass(tasksClass[1]),
+                ),
+                const SizedBox(width: 8),
+                TasksClassButton(
+                  textButton: "Missed",
+                  isSelected: selectedTasksClass == tasksClass[2],
+                  onTap: () => setSelectedTasksClass(tasksClass[2]),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 4),
-          Container(
-            padding: EdgeInsets.all(4),
-            alignment: Alignment.topLeft,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(4),
-              scrollDirection: Axis.horizontal,
-              child: BlocBuilder<TaskCubit, TaskState>(
-                builder: (context, state) {
-                  final taskCards =
-                      state.taskDatas.mapIndexed((index, task) {
-                        return TaskCard(index, task['task_title']);
-                      }).toList();
-                  return Row(
-                    spacing: 10,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: taskCards,
+          const SizedBox(height: 12),
+          BlocBuilder<TaskCubit, TaskState>(
+            builder: (context, state) {
+              final filteredTasks =
+                  state.taskDatas
+                      .where(
+                        (task) => task['task_status'] == selectedTasksClass,
+                      )
+                      .toList();
+
+              // Only update _visibleTasks if it's empty (first build or after tab change)
+              if (_visibleTasks.isEmpty ||
+                  _visibleTasks.length != filteredTasks.length) {
+                _visibleTasks = List<Map<String, dynamic>>.from(filteredTasks);
+              }
+
+              return _visibleTasks.isNotEmpty
+                  ? Column(
+                    children: [
+                      for (int i = 0; i < _visibleTasks.length; i++) ...[
+                        _buildTaskCard(_visibleTasks[i], i),
+                        const SizedBox(height: 8),
+                      ],
+                    ],
+                  )
+                  : Text(
+                    "No ${selectedTasksClass == 'com' ? 'completed' : 'missed'} tasks",
                   );
-                },
-              ),
-            ),
+            },
           ),
         ],
       ),
     );
   }
+
+  Widget _buildTaskCard(Map<String, dynamic> task, int index) {
+    if (task['task_deadline'] == null) {
+      return TaskCard.scheduled(
+        task['id'],
+        task['task_title'],
+        task['task_category'],
+        task['task_schedule_day'],
+        task['task_schedule_time'],
+        task['task_priority_level'],
+        task['task_status'] == 'com',
+        key: ValueKey(task['id']),
+        onStatusChanged: () {
+          // Remove by index directly, as this matches the current visible list
+          if (index >= 0 && index < _visibleTasks.length) {
+            setState(() {
+              _visibleTasks.removeAt(index);
+            });
+          }
+        },
+      );
+    } else if (task['task_schedule_time'] == null) {
+      return TaskCard.deadline(
+        task['id'],
+        task['task_title'],
+        task['task_category'],
+        task['task_deadline'],
+        task['task_priority_level'],
+        task['task_status'] == 'com',
+        key: ValueKey(task['id']),
+        onStatusChanged: () {
+          if (index >= 0 && index < _visibleTasks.length) {
+            setState(() {
+              _visibleTasks.removeAt(index);
+            });
+          }
+        },
+      );
+    }
+    return const SizedBox.shrink();
+  }
 }
 
-class TasksClassButton extends StatefulWidget {
+class TasksClassButton extends StatelessWidget {
   final String textButton;
   final bool isSelected;
   final VoidCallback onTap;
@@ -97,26 +160,21 @@ class TasksClassButton extends StatefulWidget {
   });
 
   @override
-  State<TasksClassButton> createState() => _TasksClassButtonState();
-}
-
-class _TasksClassButtonState extends State<TasksClassButton> {
-  @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: widget.onTap,
+      onPressed: onTap,
       style: ElevatedButton.styleFrom(
         backgroundColor:
-            widget.isSelected ? Color(0xfff9f9f9) : Color(0xffE0EFF8),
-        padding: EdgeInsets.all(12),
+            isSelected ? const Color(0xfff9f9f9) : const Color(0xffE0EFF8),
+        padding: const EdgeInsets.all(12),
       ),
       child: Text(
-        widget.textButton,
+        textButton,
         style: TextStyle(
           fontFamily: GoogleFonts.montserrat().fontFamily,
           fontSize: 12,
           fontWeight: FontWeight.bold,
-          color: widget.isSelected ? Color(0xff06BEE1) : Color(0xff1C2D51),
+          color: isSelected ? const Color(0xff06BEE1) : const Color(0xff1C2D51),
         ),
       ),
     );

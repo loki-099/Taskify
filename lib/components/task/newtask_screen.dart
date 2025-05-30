@@ -304,6 +304,14 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                               value: "Daily",
                               child: Text("Daily"),
                             ),
+                            DropdownMenuItem(
+                              value: "Hobby",
+                              child: Text("Hobby"),
+                            ),
+                            DropdownMenuItem(
+                              value: "Others",
+                              child: Text("Others"),
+                            ),
                           ],
                           onChanged: changeCategory,
                         ),
@@ -787,7 +795,7 @@ class _TimePreferenceWidgetState extends State<TimePreferenceWidget> {
                             _selectedPrio[i] = i == index;
                           }
                           selectedTaskPrio =
-                              [null, "level1", "level2", "level3"][index];
+                              ["none", "level1", "level2", "level3"][index];
                           // print(selectedTaskPrio);
                         }
 
