@@ -170,12 +170,14 @@ class _CalendarPageState extends State<CalendarPage> {
             Expanded(
               child:
                   tasksForDay.isEmpty
-                      ? Center(
+                      ? Container(
+                        width: double.infinity,
                         child: Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: Text(
                             "No tasks for this day.",
                             style: TextStyle(fontSize: 18),
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       )

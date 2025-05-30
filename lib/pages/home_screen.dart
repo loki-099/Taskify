@@ -92,16 +92,25 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             IconButton(
               onPressed: () => _onItemTapped(0),
-              icon: SvgPicture.asset(_pages[0]['icon'], semanticsLabel: "Home"),
-              color: const Color(0xFF1A6DB0),
+              icon: SvgPicture.asset(
+                _pages[0]['icon'],
+                semanticsLabel: "Home",
+                color:
+                    _selectedIndex == 0
+                        ? AppColors.color1
+                        : const Color(0xFF1A6DB0),
+              ),
             ),
             IconButton(
               onPressed: () => _onItemTapped(1),
               icon: SvgPicture.asset(
                 _pages[1]['icon'],
                 semanticsLabel: "Calendar",
+                color:
+                    _selectedIndex == 1
+                        ? AppColors.color1
+                        : const Color(0xFF1A6DB0),
               ),
-              color: const Color(0xFF1A6DB0),
             ),
             const SizedBox(width: 48), // Space for the FAB
             IconButton(
@@ -109,16 +118,22 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: SvgPicture.asset(
                 _pages[2]['icon'],
                 semanticsLabel: "Tasks",
+                color:
+                    _selectedIndex == 2
+                        ? AppColors.color1
+                        : const Color(0xFF1A6DB0),
               ),
-              color: const Color(0xFF1A6DB0),
             ),
             IconButton(
               onPressed: () => _onItemTapped(3),
               icon: SvgPicture.asset(
                 _pages[3]['icon'],
                 semanticsLabel: "Profile",
+                color:
+                    _selectedIndex == 3
+                        ? AppColors.color1
+                        : const Color(0xFF1A6DB0),
               ),
-              color: const Color(0xFF1A6DB0),
             ),
           ],
         ),

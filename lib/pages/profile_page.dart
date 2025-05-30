@@ -13,6 +13,30 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  void _confirmLogout(BuildContext context) async {
+    final shouldLogout = await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text('Confirm Logout'),
+            content: Text('Are you sure you want to log out?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text('Log Out', style: TextStyle(color: Colors.red)),
+              ),
+            ],
+          ),
+    );
+    if (shouldLogout == true) {
+      AuthService().signOut();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -151,7 +175,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             SizedBox(
                               width: double.infinity,
                               child: TextButton(
-                                onPressed: AuthService().signOut,
+                                onPressed: () => _confirmLogout(context),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,

@@ -71,8 +71,9 @@ class _TaskDialogState extends State<TaskDialog> {
                 ),
                 Text(
                   widget.dues.isEmpty
-                      ? "${widget.schedDays} | ${widget.schedTime}"
+                      ? "${widget.schedDays == "Sun,Mon,Tue,Wed,Thu,Fri,Sat" ? "Everyday" : widget.schedDays} | ${widget.schedTime}"
                       : "${widget.dues[0]} | ${widget.dues[1]}",
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
