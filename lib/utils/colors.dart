@@ -7,6 +7,11 @@ class AppColors {
   static const Color color4 = Color(0xFF03256C);
   static const Color colorText = Color(0xFF1C2D51);
   static const Color white = Color(0xfff9f9f9);
+  static const LinearGradient mainGradient = LinearGradient(
+    colors: [AppColors.color1, Color(0xff1A6DB0)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
 
   // You can add more custom colors here
 }

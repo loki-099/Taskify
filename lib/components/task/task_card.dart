@@ -85,10 +85,10 @@ class TaskCard extends StatefulWidget {
   }
 
   @override
-  State<TaskCard> createState() => _PrioTaskCardState();
+  State<TaskCard> createState() => _TaskCardState();
 }
 
-class _PrioTaskCardState extends State<TaskCard> {
+class _TaskCardState extends State<TaskCard> {
   final SupabaseClient _supabase = Supabase.instance.client;
   bool isVisible = true;
 
