@@ -6,7 +6,9 @@ import 'package:taskify/cubit/user_cubit.dart';
 import 'package:taskify/routes/app_routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taskify/utils/colors.dart';
-// import 'pages/welcome_page.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart';
+import 'package:timezone/timezone.dart';
 
 void main() async {
   await Supabase.initialize(
@@ -17,8 +19,49 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final FlutterLocalNotificationsPlugin notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  Future<void> init() async {
+    initializeTimeZones();
+
+    setLocalLocation(getLocation('Asia/Shanghai'));
+
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/launcher_icon',
+    );
+    const DarwinInitializationSettings iosSettings =
+        DarwinInitializationSettings();
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: androidSettings, iOS: iosSettings);
+    await notificationsPlugin.initialize(initializationSettings);
+    await notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.requestNotificationsPermission();
+
+    await notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin
+        >()
+        ?.requestPermissions(alert: true, badge: true, sound: true);
+  }
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
