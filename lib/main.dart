@@ -7,8 +7,7 @@ import 'package:taskify/routes/app_routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taskify/utils/colors.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart';
-import 'package:timezone/timezone.dart';
+import 'package:taskify/utils/notification_service.dart';
 
 void main() async {
   await Supabase.initialize(
@@ -16,6 +15,7 @@ void main() async {
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiYnN3ZGdsZmR6Y3VwbWRucHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQxODI2ODksImV4cCI6MjA1OTc1ODY4OX0.fP0b17Fe5y57aq-Z__7qMhaUwUtXKEcquZYxwh0hrd4',
   );
+  await NotificationService.init();
   runApp(const MyApp());
 }
 
@@ -27,42 +27,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final FlutterLocalNotificationsPlugin notificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
-  Future<void> init() async {
-    initializeTimeZones();
-
-    setLocalLocation(getLocation('Asia/Shanghai'));
-
-    const androidSettings = AndroidInitializationSettings(
-      '@mipmap/launcher_icon',
-    );
-    const DarwinInitializationSettings iosSettings =
-        DarwinInitializationSettings();
-
-    const InitializationSettings initializationSettings =
-        InitializationSettings(android: androidSettings, iOS: iosSettings);
-    await notificationsPlugin.initialize(initializationSettings);
-    await notificationsPlugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.requestNotificationsPermission();
-
-    await notificationsPlugin
-        .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin
-        >()
-        ?.requestPermissions(alert: true, badge: true, sound: true);
-  }
-
-  @override
-  void initState() {
-    init();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

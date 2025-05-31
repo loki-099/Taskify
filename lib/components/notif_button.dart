@@ -3,6 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:taskify/auth/auth_service.dart';
 import 'package:taskify/routes/app_routes.dart';
 import 'package:taskify/utils/colors.dart';
+import 'package:taskify/utils/notification_service.dart';
 
 class NotificationButton extends StatefulWidget {
   const NotificationButton({super.key});
@@ -12,40 +13,15 @@ class NotificationButton extends StatefulWidget {
 }
 
 class _NotificationButtonState extends State<NotificationButton> {
-  final FlutterLocalNotificationsPlugin notificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
-  Future<void> showInstantNotification({
-    required int id,
-    required String title,
-    required String body,
-  }) async {
-    await notificationsPlugin.show(
-      id,
-      title,
-      body,
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'instant_notification_channel_id',
-          'Instant Notifications',
-          channelDescription: 'Instant notification channel',
-          importance: Importance.max,
-          priority: Priority.high,
-        ),
-        iOS: DarwinNotificationDetails(),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return IconButton(
       onPressed:
           // () => Navigator.pushNamed(context, AppRoutes.notificationsScreen),
-          () => showInstantNotification(
+          () => NotificationService.showInstantNotification(
             id: 0,
-            title: "Hello",
-            body: "Try Notifications",
+            title: "Reminder!",
+            body: "15 minutes before due!",
           ),
       icon: Badge(
         // label: Text(""),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:taskify/auth/auth_service.dart';
 import 'package:taskify/components/button.dart';
@@ -28,6 +29,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   String _selectedSchedDays = "";
   String? _selectedTaskPrio;
   List<bool> _selectedDays = List.generate(7, (_) => false);
+  int taskReminderMinutesBefore = 0;
 
   Future<void> createTaskFunction() async {
     // print(_selectedTaskPrio);
@@ -45,6 +47,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
           _selectedSchedDays,
           timetzString,
           _selectedTaskPrio,
+          taskReminderMinutesBefore,
         );
       } else {
         final combinedDateTime = DateTime(
@@ -68,6 +71,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
           _category,
           formatted,
           _selectedTaskPrio,
+          taskReminderMinutesBefore,
         );
       }
     }
@@ -84,14 +88,14 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
 
   List<bool> _selectedReminder = List.generate(7, (_) => false);
 
-  List<String> reminders = [
-    "5 min before",
-    "15 min before",
-    "20 min before",
-    "30 min before",
-    "45 min before",
-    "1 hour before",
-    "1 day before",
+  List<List<dynamic>> reminders = [
+    ["5 min before", 5],
+    ["15 min before", 15],
+    ["20 min before", 20],
+    ["30 min before", 30],
+    ["45 min before", 45],
+    ["1 hour before", 60],
+    ["1 day before", 1440],
   ];
 
   Future<void> showMultiRemindersPicker() async {
@@ -121,11 +125,12 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                   itemCount: reminders.length,
                   itemBuilder: (context, index) {
                     return CheckboxListTile(
-                      title: Text(reminders[index]),
+                      title: Text(reminders[index][0]),
                       value: tempSelected[index],
                       onChanged: (bool? value) {
                         setState(() {
                           tempSelected[index] = value ?? false;
+                          taskReminderMinutesBefore = reminders[index][1];
                         });
                       },
                     );
@@ -436,6 +441,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                                 text: "OFF",
                                 onPressed: () {
                                   setState(() {
+                                    taskReminderMinutesBefore = 0;
                                     _selectedReminder = List.generate(
                                       7,
                                       (_) => false,
@@ -450,6 +456,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                                 text: "5 mins",
                                 onPressed: () {
                                   setState(() {
+                                    taskReminderMinutesBefore = 5;
                                     _selectedReminder[0] =
                                         !_selectedReminder[0];
                                   });
@@ -462,6 +469,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                                 text: "15 mins",
                                 onPressed: () {
                                   setState(() {
+                                    taskReminderMinutesBefore = 15;
                                     _selectedReminder[1] =
                                         !_selectedReminder[1];
                                   });

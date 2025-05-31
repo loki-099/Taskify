@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskify/cubit/task_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taskify/utils/notification_service.dart';
 
 class TaskCubit extends Cubit<TaskState> {
   TaskCubit() : super(TaskState.initialize());
@@ -21,6 +22,10 @@ class TaskCubit extends Cubit<TaskState> {
         } else {
           emit(TaskState(response));
           print("Success updating bloc");
+
+          for (var task in response) {
+            await NotificationService.setReminders(task);
+          }
         }
       } catch (e) {
         print("Error: $e");

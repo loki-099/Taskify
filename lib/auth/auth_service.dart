@@ -86,6 +86,7 @@ class AuthService {
     taskScheduleDay,
     taskScheduleTime,
     taskPriorityLevel,
+    taskReminderMinutesBefore,
   ) async {
     try {
       await _supabase.from('task').insert([
@@ -99,6 +100,7 @@ class AuthService {
           'task_schedule_time': taskScheduleTime,
           'task_priority_level': taskPriorityLevel,
           'task_status': "inp",
+          'reminder_minutes_before': taskReminderMinutesBefore,
         },
       ]);
     } catch (e) {
@@ -112,6 +114,7 @@ class AuthService {
     taskCategory,
     taskDeadline,
     taskPriorityLevel,
+    taskReminderMinutesBefore,
   ) async {
     try {
       await _supabase.from('task').insert([
@@ -125,6 +128,7 @@ class AuthService {
           'task_schedule_time': null,
           'task_priority_level': taskPriorityLevel,
           'task_status': "inp",
+          'reminder_minutes_before': taskReminderMinutesBefore,
         },
       ]);
     } catch (e) {
