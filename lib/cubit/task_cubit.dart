@@ -23,6 +23,7 @@ class TaskCubit extends Cubit<TaskState> {
           emit(TaskState(response));
           print("Success updating bloc");
 
+          NotificationService.cancelAllNotifications();
           for (var task in response) {
             await NotificationService.setReminders(task);
           }

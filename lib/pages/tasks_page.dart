@@ -120,7 +120,9 @@ class _TasksPageState extends State<TasksPage> {
                           })
                           .whereType<Widget>()
                           .toList();
-                  return Column(spacing: 8, children: prioTaskCards);
+                  return prioTaskCards.isEmpty
+                      ? Text("No tasks. Tap '+' to add task.")
+                      : Column(spacing: 8, children: prioTaskCards);
                 },
               ),
             ),

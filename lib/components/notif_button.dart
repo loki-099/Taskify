@@ -17,12 +17,7 @@ class _NotificationButtonState extends State<NotificationButton> {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed:
-          // () => Navigator.pushNamed(context, AppRoutes.notificationsScreen),
-          () => NotificationService.showInstantNotification(
-            id: 0,
-            title: "Reminder!",
-            body: "15 minutes before due!",
-          ),
+          () => Navigator.pushNamed(context, AppRoutes.notificationsScreen),
       icon: Badge(
         // label: Text(""),
         isLabelVisible: true,

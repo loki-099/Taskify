@@ -96,7 +96,9 @@ class _HomePageState extends State<HomePage> {
                     ],
                   )
                   : Text(
-                    "No ${selectedTasksClass == 'com' ? 'completed' : 'missed'} tasks",
+                    selectedTasksClass == 'com'
+                        ? 'No completed tasks.'
+                        : "Tap '+' to add tasks.",
                   );
             },
           ),

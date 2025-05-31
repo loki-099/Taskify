@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart';
 import 'package:timezone/timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -100,6 +103,10 @@ class NotificationService {
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       // Match exact time on Android 12+
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
+      payload: jsonEncode({
+        'reminder_minutes': reminderMinutesBefore,
+        'deadline': DateFormat('MMM d, y hh:mm a').format(deadline),
+      }),
     );
     print("Notification Set");
   }
@@ -120,5 +127,25 @@ class NotificationService {
         );
       }
     }
+  }
+
+  static Future<void> cancelAllNotifications() async {
+    await notificationsPlugin.cancelAll();
+  }
+
+  static Future<bool> isThereNotifications() async {
+    final pending = await notificationsPlugin.pendingNotificationRequests();
+    if (pending.isNotEmpty) {
+      print("True");
+      return true;
+    } else {
+      print("False");
+      return false;
+    }
+  }
+
+  static Future<List<PendingNotificationRequest>>
+  getPendingNotifications() async {
+    return await notificationsPlugin.pendingNotificationRequests();
   }
 }
