@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taskify/auth/auth_service.dart';
+import 'package:taskify/routes/app_routes.dart';
 import 'package:taskify/utils/colors.dart';
 
 class NotificationButton extends StatefulWidget {
@@ -13,7 +14,8 @@ class _NotificationButtonState extends State<NotificationButton> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: AuthService().signOut,
+      onPressed:
+          () => Navigator.pushNamed(context, AppRoutes.notificationsScreen),
       icon: Badge(
         // label: Text(""),
         isLabelVisible: true,

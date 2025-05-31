@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskify/auth/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:taskify/components/notif_button.dart';
 import 'package:taskify/cubit/user_cubit.dart';
 import 'package:taskify/cubit/user_state.dart';
+import 'package:taskify/routes/app_routes.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppbar({super.key});
@@ -65,17 +67,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ],
                 ),
-                IconButton(
-                  onPressed: AuthService().signOut,
-                  icon: Badge(
-                    // label: Text(""),
-                    isLabelVisible: true,
-                    smallSize: 12,
-                    backgroundColor: Color(0xff06BEE1),
-                    child: Icon(Icons.notifications, color: darkColor),
-                  ),
-                  iconSize: 30,
-                ),
+                NotificationButton(),
               ],
             ),
           ),
