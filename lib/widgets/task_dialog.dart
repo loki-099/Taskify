@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taskify/cubit/task_cubit.dart';
 import 'package:taskify/utils/colors.dart';
+import 'package:taskify/widgets/edit_task.dart';
 
 class TaskDialog extends StatefulWidget {
   final int taskId;
@@ -97,7 +99,86 @@ class _TaskDialogState extends State<TaskDialog> {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => EditTask(
+                                taskId: widget.taskId,
+                                initialTitle: task['task_title'] ?? '',
+                                initialDescription:
+                                    task['task_description'] ?? '',
+                                initialCategory:
+                                    task['task_category'] ?? 'School',
+                                initialtSchedFDead:
+                                    task['task_deadline'] == null
+                                        ? true
+                                        : false,
+                                initialSchedTime:
+                                    task['task_schedule_time'] != null
+                                        ? TimeOfDay(
+                                          hour: int.parse(
+                                            task['task_schedule_time'].split(
+                                              ":",
+                                            )[0],
+                                          ),
+                                          minute: int.parse(
+                                            task['task_schedule_time'].split(
+                                              ":",
+                                            )[1],
+                                          ),
+                                        )
+                                        : null,
+                                initialDeadTime:
+                                    task['task_deadline'] != null
+                                        ? TimeOfDay(
+                                          hour:
+                                              DateTime.parse(
+                                                task['task_deadline'],
+                                              ).hour,
+                                          minute:
+                                              DateTime.parse(
+                                                task['task_deadline'],
+                                              ).minute,
+                                        )
+                                        : null,
+                                initialDate:
+                                    task['task_deadline'] != null
+                                        ? DateTime.parse(task['task_deadline'])
+                                        : null,
+                                initialSchedDays:
+                                    task['task_schedule_day'] ?? "",
+                                initialTaskPrio: task['task_priority_level'],
+                                initialSelectedDays: List<bool>.filled(
+                                  7,
+                                  false,
+                                ),
+                                initialReminderMinutesBefore:
+                                    task['reminder_minutes_before'] ?? 0,
+                                onUpdate: () {},
+                              ),
+                        ),
+                      );
+                      if (result == true) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Task updated successfully!'),
+                            duration: Duration(seconds: 2),
+                            backgroundColor: Colors.green,
+                            behavior: SnackBarBehavior.floating,
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 16,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        );
+                      }
+                    },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.color1,
                       side: BorderSide(color: AppColors.color1),

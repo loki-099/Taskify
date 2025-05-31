@@ -7,7 +7,7 @@ class TaskCubit extends Cubit<TaskState> {
   TaskCubit() : super(TaskState.initialize());
   final SupabaseClient _supabase = Supabase.instance.client;
 
-  void updateTaskDatas() async {
+  Future<void> updateTaskDatas() async {
     final user = _supabase.auth.currentUser;
     if (user != null) {
       try {

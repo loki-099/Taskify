@@ -1,27 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:taskify/auth/auth_service.dart';
 import 'package:taskify/components/button.dart';
 import 'package:taskify/cubit/task_cubit.dart';
 import 'package:taskify/utils/colors.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class NewTaskScreen extends StatefulWidget {
-  const NewTaskScreen({super.key});
+class EditTask extends StatefulWidget {
+  final int taskId;
+  final String initialTitle;
+  final String initialDescription;
+  final String initialCategory;
+  final bool? initialtSchedFDead;
+  final TimeOfDay? initialSchedTime;
+  final TimeOfDay? initialDeadTime;
+  final DateTime? initialDate;
+  final String initialSchedDays;
+  final String? initialTaskPrio;
+  final List<bool> initialSelectedDays;
+  final int initialReminderMinutesBefore;
+  final VoidCallback? onUpdate;
+
+  const EditTask({
+    super.key,
+    required this.taskId,
+    required this.initialTitle,
+    required this.initialDescription,
+    required this.initialCategory,
+    required this.initialtSchedFDead,
+    this.initialSchedTime,
+    this.initialDeadTime,
+    this.initialDate,
+    this.initialSchedDays = "",
+    this.initialTaskPrio,
+    this.initialSelectedDays = const [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    this.initialReminderMinutesBefore = 0,
+    this.onUpdate,
+  });
 
   @override
-  State<NewTaskScreen> createState() => _NewTaskScreenState();
+  State<EditTask> createState() => _EditTaskState();
 }
 
-class _NewTaskScreenState extends State<NewTaskScreen> {
-  String _category = "School";
-  bool? tSchedFDead;
-  bool hasTimePref = false;
-  final _taskTitleController = TextEditingController();
-  final _taskDescriptionController = TextEditingController();
+class _EditTaskState extends State<EditTask> {
+  late String _category;
+  late bool? tSchedFDead;
+  late bool hasTimePref;
+  late TextEditingController _taskTitleController;
+  late TextEditingController _taskDescriptionController;
 
   // TimePrefVariables
-  // Inside _NewTaskScreenState
   TimeOfDay? _selectedSchedTime;
   TimeOfDay? _selectedDeadTime;
   DateTime? _selectedDate;
@@ -29,52 +65,46 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   String? _selectedTaskPrio;
   List<bool> _selectedDays = List.generate(7, (_) => false);
   int taskReminderMinutesBefore = 0;
+  List<bool> _selectedReminder = List.generate(7, (_) => false);
 
-  Future<void> createTaskFunction() async {
-    // print(_selectedTaskPrio);
-    final taskTitle = _taskTitleController.text;
-    final taskDescription = _taskDescriptionController.text;
-    if (tSchedFDead != null) {
-      if (tSchedFDead!) {
-        final hour = _selectedSchedTime!.hour.toString().padLeft(2, '0');
-        final minute = _selectedSchedTime!.minute.toString().padLeft(2, '0');
-        final timetzString = "$hour:$minute:00+08:00";
-        await AuthService().insertSchedTask(
-          taskTitle,
-          taskDescription,
-          _category,
-          _selectedSchedDays,
-          timetzString,
-          _selectedTaskPrio,
-          taskReminderMinutesBefore,
-        );
-      } else {
-        final combinedDateTime = DateTime(
-          _selectedDate!.year,
-          _selectedDate!.month,
-          _selectedDate!.day,
-          _selectedDeadTime!.hour,
-          _selectedDeadTime!.minute,
-          0,
-        );
-        final formatted =
-            "${combinedDateTime.year.toString().padLeft(4, '0')}-"
-            "${combinedDateTime.month.toString().padLeft(2, '0')}-"
-            "${combinedDateTime.day.toString().padLeft(2, '0')} "
-            "${combinedDateTime.hour.toString().padLeft(2, '0')}:"
-            "${combinedDateTime.minute.toString().padLeft(2, '0')}:"
-            "${combinedDateTime.second.toString().padLeft(2, '0')}+08";
-        await AuthService().insertDeadTask(
-          taskTitle,
-          taskDescription,
-          _category,
-          formatted,
-          _selectedTaskPrio,
-          taskReminderMinutesBefore,
-        );
-      }
+  @override
+  void initState() {
+    super.initState();
+    _category = widget.initialCategory;
+    tSchedFDead = widget.initialtSchedFDead;
+    hasTimePref = widget.initialtSchedFDead != null;
+    _taskTitleController = TextEditingController(text: widget.initialTitle);
+    _taskDescriptionController = TextEditingController(
+      text: widget.initialDescription,
+    );
+    _selectedSchedTime = widget.initialSchedTime;
+    _selectedDeadTime = widget.initialDeadTime;
+    _selectedDate = widget.initialDate;
+    _selectedSchedDays = widget.initialSchedDays;
+    _selectedTaskPrio = widget.initialTaskPrio;
+    _selectedDays = List<bool>.from(widget.initialSelectedDays);
+    taskReminderMinutesBefore = widget.initialReminderMinutesBefore;
+
+    // Set _selectedReminder based on initialReminderMinutesBefore
+    if (taskReminderMinutesBefore != 0) {
+      final idx = [
+        5,
+        15,
+        20,
+        30,
+        45,
+        60,
+        1440,
+      ].indexOf(taskReminderMinutesBefore);
+      if (idx != -1) _selectedReminder[idx] = true;
     }
-    context.read<TaskCubit>().updateTaskDatas();
+  }
+
+  @override
+  void dispose() {
+    _taskTitleController.dispose();
+    _taskDescriptionController.dispose();
+    super.dispose();
   }
 
   void changeCategory(String? selectedCategory) {
@@ -85,20 +115,16 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     }
   }
 
-  List<bool> _selectedReminder = List.generate(7, (_) => false);
-
-  List<List<dynamic>> reminders = [
-    ["5 min before", 5],
-    ["15 min before", 15],
-    ["20 min before", 20],
-    ["30 min before", 30],
-    ["45 min before", 45],
-    ["1 hour before", 60],
-    ["1 day before", 1440],
-  ];
-
   Future<void> showMultiRemindersPicker() async {
-    // Temporary selection for dialog
+    List<List<dynamic>> reminders = [
+      ["5 min before", 5],
+      ["15 min before", 15],
+      ["20 min before", 20],
+      ["30 min before", 30],
+      ["45 min before", 45],
+      ["1 hour before", 60],
+      ["1 day before", 1440],
+    ];
     List<bool> tempSelected = List<bool>.from(_selectedReminder);
 
     await showDialog(
@@ -143,7 +169,6 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Do nothing here, handle after dialog
                     _selectedReminder = tempSelected;
                     Navigator.pop(context, tempSelected);
                   },
@@ -156,13 +181,58 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
       },
     ).then((result) {
       if (result != null && result is List<bool>) {
-        // Handle your state update here, outside the dialog
-        // Example:
-        // setState(() {
-        //   _selectedDays = List<bool>.from(result);
-        // });
+        setState(() {
+          _selectedReminder = List<bool>.from(result);
+        });
       }
     });
+  }
+
+  // Leave your update logic here for you to implement
+  Future<void> _onUpdateTask() async {
+    final taskTitle = _taskTitleController.text;
+    final taskDescription = _taskDescriptionController.text;
+    if (tSchedFDead != null) {
+      if (tSchedFDead!) {
+        final hour = _selectedSchedTime!.hour.toString().padLeft(2, '0');
+        final minute = _selectedSchedTime!.minute.toString().padLeft(2, '0');
+        final timetzString = "$hour:$minute:00+08:00";
+        await AuthService().insertSchedTask(
+          taskTitle,
+          taskDescription,
+          _category,
+          _selectedSchedDays,
+          timetzString,
+          _selectedTaskPrio,
+          taskReminderMinutesBefore,
+        );
+      } else {
+        final combinedDateTime = DateTime(
+          _selectedDate!.year,
+          _selectedDate!.month,
+          _selectedDate!.day,
+          _selectedDeadTime!.hour,
+          _selectedDeadTime!.minute,
+          0,
+        );
+        final formatted =
+            "${combinedDateTime.year.toString().padLeft(4, '0')}-"
+            "${combinedDateTime.month.toString().padLeft(2, '0')}-"
+            "${combinedDateTime.day.toString().padLeft(2, '0')} "
+            "${combinedDateTime.hour.toString().padLeft(2, '0')}:"
+            "${combinedDateTime.minute.toString().padLeft(2, '0')}:"
+            "${combinedDateTime.second.toString().padLeft(2, '0')}+08";
+        await AuthService().updateDeadTask(
+          widget.taskId,
+          taskTitle,
+          taskDescription,
+          _category,
+          formatted,
+          _selectedTaskPrio,
+          taskReminderMinutesBefore,
+        );
+      }
+    }
   }
 
   @override
@@ -171,10 +241,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         foregroundColor: AppColors.white,
-        title: Text(
-          "Create Task",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: Text("Edit Task", style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -403,6 +470,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                           visible: hasTimePref,
                           child: TimePreferenceWidget(
                             tSchedFDead: tSchedFDead,
+                            selectedPrioLevel: _selectedTaskPrio,
+                            selectedDeadlineDate: _selectedDate,
                             onChanged: ({
                               TimeOfDay? selectedSchedTime,
                               TimeOfDay? selectedDeadTime,
@@ -415,7 +484,9 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                               _selectedDeadTime = selectedDeadTime;
                               _selectedDate = selectedDate;
                               _selectedSchedDays = selectedSchedDays;
-                              _selectedTaskPrio = selectedTaskPrio;
+                              _selectedTaskPrio =
+                                  selectedTaskPrio ??
+                                  _selectedTaskPrio; // <-- This line ensures it doesn't become null
                               _selectedDays =
                                   selectedDays ??
                                   List.generate(7, (_) => false);
@@ -493,10 +564,11 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                       left: 20,
                       right: 20,
                       child: CustomButton(
-                        text: "Create Task",
+                        text: "Update Task",
                         onPressed: () async {
-                          await createTaskFunction();
-                          Navigator.pop(context, true);
+                          await _onUpdateTask();
+                          await context.read<TaskCubit>().updateTaskDatas();
+                          if (mounted) Navigator.pop(context, true);
                         },
                       ),
                     ),
@@ -513,6 +585,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
 
 class TimePreferenceWidget extends StatefulWidget {
   final bool? tSchedFDead;
+  final String? selectedPrioLevel;
+  final DateTime? selectedDeadlineDate;
   final void Function({
     TimeOfDay? selectedSchedTime,
     TimeOfDay? selectedDeadTime,
@@ -523,7 +597,13 @@ class TimePreferenceWidget extends StatefulWidget {
   })?
   onChanged;
 
-  const TimePreferenceWidget({super.key, this.tSchedFDead, this.onChanged});
+  const TimePreferenceWidget({
+    super.key,
+    this.tSchedFDead,
+    this.selectedPrioLevel,
+    this.selectedDeadlineDate,
+    this.onChanged,
+  });
 
   @override
   State<TimePreferenceWidget> createState() => _TimePreferenceWidgetState();
@@ -687,7 +767,25 @@ class _TimePreferenceWidgetState extends State<TimePreferenceWidget> {
     _notifyParent();
   }
 
-  final List<bool> _selectedPrio = List.generate(4, (index) => index == 0);
+  final List<bool> _selectedPrio = List.generate(4, (index) => false);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final int indexPrio = [
+      "none",
+      "level1",
+      "level2",
+      "level3",
+    ].indexOf(widget.selectedPrioLevel!);
+    _selectedPrio[indexPrio] = true;
+
+    selectedDate = widget.selectedDeadlineDate;
+    selectedDeadTime = TimeOfDay.fromDateTime(
+      widget.selectedDeadlineDate!.toLocal(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -808,7 +906,7 @@ class _TimePreferenceWidgetState extends State<TimePreferenceWidget> {
 
                         if (!_selectedPrio.contains(true)) {
                           _selectedPrio[0] = true;
-                          selectedTaskPrio = null;
+                          selectedTaskPrio = "none";
                         }
                       });
                       _notifyParent();

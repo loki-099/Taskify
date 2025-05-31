@@ -33,12 +33,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _removeTask(int index) {
-    setState(() {
-      _visibleTasks.removeAt(index);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -86,11 +80,11 @@ class _HomePageState extends State<HomePage> {
                 _visibleTasks = List<Map<String, dynamic>>.from(filteredTasks);
               }
 
-              return _visibleTasks.isNotEmpty
+              return filteredTasks.isNotEmpty
                   ? Column(
                     children: [
-                      for (int i = 0; i < _visibleTasks.length; i++) ...[
-                        _buildTaskCard(_visibleTasks[i], i),
+                      for (int i = 0; i < filteredTasks.length; i++) ...[
+                        _buildTaskCard(filteredTasks[i], i),
                         const SizedBox(height: 8),
                       ],
                     ],

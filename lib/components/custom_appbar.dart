@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:taskify/components/notif_button.dart';
 import 'package:taskify/cubit/user_cubit.dart';
 import 'package:taskify/cubit/user_state.dart';
-import 'package:taskify/routes/app_routes.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppbar({super.key});

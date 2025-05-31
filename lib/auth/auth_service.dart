@@ -135,4 +135,33 @@ class AuthService {
       throw Exception('Error inserting: $e');
     }
   }
+
+  Future<void> updateDeadTask(
+    taskId,
+    taskTitle,
+    taskDescription,
+    taskCategory,
+    taskDeadline,
+    taskPriorityLevel,
+    taskReminderMinutesBefore,
+  ) async {
+    try {
+      await _supabase
+          .from('task')
+          .update({
+            'task_title': taskTitle,
+            'task_description': taskDescription,
+            'task_category': taskCategory,
+            'task_deadline': taskDeadline,
+            'task_schedule_day': null,
+            'task_schedule_time': null,
+            'task_priority_level': taskPriorityLevel,
+            'task_status': "inp",
+            'reminder_minutes_before': taskReminderMinutesBefore,
+          })
+          .eq('id', taskId);
+    } catch (e) {
+      throw Exception('Error updating: $e');
+    }
+  }
 }
