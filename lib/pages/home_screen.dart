@@ -9,6 +9,7 @@ import 'package:taskify/pages/profile_page.dart';
 import 'package:taskify/pages/tasks_page.dart';
 import 'package:taskify/routes/app_routes.dart';
 import 'package:taskify/utils/colors.dart';
+import 'package:taskify/utils/notification_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -33,10 +34,15 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void updateAllData() async {
+    await context.read<UserCubit>().updateUserData();
+    await context.read<TaskCubit>().updateTaskDatas();
+    NotificationService.cancelAllNotifications();
+  }
+
   @override
   void initState() {
-    context.read<UserCubit>().updateUserData();
-    context.read<TaskCubit>().updateTaskDatas();
+    updateAllData();
     super.initState();
   }
 

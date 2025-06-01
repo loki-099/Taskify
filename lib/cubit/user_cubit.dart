@@ -6,14 +6,14 @@ class UserCubit extends Cubit<UserState> {
   UserCubit() : super(UserState.initialize());
 
   // void updateUserData() => emit(UserState(AuthService().getUserData()));
-  void updateUserData() async {
+  Future<void> updateUserData() async {
     print("Updating User Data...");
     try {
       final userData = await AuthService().getUserData();
       emit(UserState(userData ?? []));
       print(userData?[0]);
     } catch (e) {
-      print("Error $e");
+      print("Error updating user data: $e");
       emit(UserState([]));
     }
   }

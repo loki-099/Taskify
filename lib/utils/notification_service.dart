@@ -105,7 +105,7 @@ class NotificationService {
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
       payload: jsonEncode({
         'reminder_minutes': reminderMinutesBefore,
-        'deadline': DateFormat('MMM d, y hh:mm a').format(deadline),
+        'deadline': DateFormat('hh:mm a, MM/dd/yyyy').format(deadline),
       }),
     );
     print("Notification Set");
@@ -121,7 +121,7 @@ class NotificationService {
         setReminderForDeadline(
           id: task['id'],
           title: title,
-          body: "$title is due at $minutesBefore minutes!",
+          body: "$title is due in $minutesBefore minutes!",
           deadline: deadline,
           reminderMinutesBefore: minutesBefore,
         );

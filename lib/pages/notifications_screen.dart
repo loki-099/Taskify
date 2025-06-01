@@ -65,39 +65,34 @@ class _NotifWidgetsState extends State<NotifWidgets> {
           // Replace this with your actual widget to display notifications
           return ListView.separated(
             itemCount: pendingNotifications.length,
-            separatorBuilder: (context, index) {
-              return SizedBox(height: 8);
-            },
+            separatorBuilder: (context, index) => SizedBox(height: 8),
             itemBuilder: (context, index) {
               final notification = pendingNotifications[index];
               return Container(
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
                 decoration: BoxDecoration(
                   color: Color(0xffDFF0FF),
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: Row(
-                  spacing: 8,
-                  children: [
-                    Container(
-                      child: Icon(
-                        Icons.access_time_rounded,
-                        size: 40,
-                        color: AppColors.color1,
-                      ),
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(
+                    Icons.access_time_rounded,
+                    size: 40,
+                    color: AppColors.color1,
+                  ),
+                  title: Text(
+                    notification.title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.colorText,
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          notification.title,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.colorText,
-                          ),
-                        ),
-                        Text(
+                  ),
+                  subtitle: Row(
+                    children: [
+                      Flexible(
+                        child: Text(
                           () {
                             try {
                               if (notification.payload != null &&
@@ -105,8 +100,7 @@ class _NotifWidgetsState extends State<NotifWidgets> {
                                 final payload = jsonDecode(
                                   notification.payload,
                                 );
-                                return "Reminds ${payload['reminder_minutes']} mins before deadline!";
-                                // return "Your task deadline is approaching soon!";
+                                return "Reminds ${payload['reminder_minutes']} mins before ${payload['deadline']}!";
                               }
                             } catch (e) {
                               print("Payload error: $e");
@@ -117,10 +111,13 @@ class _NotifWidgetsState extends State<NotifWidgets> {
                             fontSize: 12,
                             color: AppColors.colorText,
                           ),
+                          overflow: TextOverflow.fade,
+                          maxLines: 1,
+                          softWrap: false,
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

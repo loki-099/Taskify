@@ -29,6 +29,7 @@ class _RegisterPage extends State<RegisterPage> {
 
   // Login button pressed
   void login() async {
+    print("Signing up...");
     final firstName = _firstNameController.text;
     final lastName = _lastNameController.text;
     final email = _emailController.text;
@@ -43,12 +44,13 @@ class _RegisterPage extends State<RegisterPage> {
           firstName,
           lastName,
         );
+        await authService.createUserProfile(email, firstName, lastName);
         Navigator.pop(context);
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text("Error: $e")));
+          ).showSnackBar(SnackBar(content: Text("Error signing up: $e")));
         }
       }
     } else {

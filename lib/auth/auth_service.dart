@@ -19,6 +19,26 @@ class AuthService {
     }
   }
 
+  Future<void> createUserProfile(
+    String email,
+    String firstName,
+    String lastName,
+  ) async {
+    print("Creating User Profile...");
+    final user = _supabase.auth.currentUser;
+    if (user != null) {
+      print("User not null..");
+      print("User: $user");
+      final response = await _supabase.from('profiles').insert({
+        'id': user.id,
+        'first_name': firstName,
+        'last_name': lastName,
+        // add other fields as needed
+      });
+      print("Profile Created: $response");
+    }
+  }
+
   // Sign up
   Future<AuthResponse> signUpWithEmailPassword(
     String email,
@@ -26,23 +46,24 @@ class AuthService {
     String firstName,
     String lastName,
   ) async {
+    print("Signing up to database...");
     try {
       final response = await _supabase.auth.signUp(
         email: email,
         password: password,
       );
 
-      if (response.user != null) {
-        final userId = response.user?.id;
+      // if (response.user != null) {
+      //   final userId = response.user?.id;
 
-        final profileResponse = await _supabase.from('profiles').insert([
-          {'id': userId, 'first_name': firstName, 'last_name': lastName},
-        ]);
-      }
-
+      //   final profileResponse = await _supabase.from('profiles').insert([
+      //     {'id': userId, 'first_name': firstName, 'last_name': lastName},
+      //   ]);
+      // }
+      print("Success signing up: $response");
       return response;
     } catch (e) {
-      throw Exception('Error signing in: $e');
+      throw Exception('Error signing up to database: $e');
     }
   }
 
@@ -59,6 +80,7 @@ class AuthService {
   }
 
   Future<List<Map<String, dynamic>>?> getUserData() async {
+    print("Getting user data...");
     final user = _supabase.auth.currentUser;
     if (user == null) return null;
 
@@ -68,13 +90,16 @@ class AuthService {
           .select()
           .eq('id', user.id);
 
+      print("User Get Date response: $response");
+
       if (response.isEmpty == true) {
-        print("Error fetching...");
+        print("User data is empty...");
         return null;
       }
 
       return response;
     } catch (e) {
+      print("Error getting user data...");
       return null;
     }
   }
